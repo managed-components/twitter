@@ -27,7 +27,7 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
    - code: txn_id
    - placeholder: XXXXXXXXX
    - type: number
-   - requiered: true
+   - required: true
 
 ## 📝 License
 
