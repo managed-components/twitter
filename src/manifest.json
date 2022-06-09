@@ -1,10 +1,15 @@
 {
-  "name": "MC Dynamite",
-  "description": "Totally hawt Managed Component 🔥🔥🔥",
-  "namespace": "mc-dynamite",
-  "icon": "assets/mc-dynamite.svg",
-  "categories": [],
-  "provides": ["events"],
-  "allowCustomFields": true,
-  "permissions": []
+  "name": "Twitter Pixel",
+  "description": "Twitter Pixel",
+  "namespace": "twitter",
+  "icon": "assets/twitter.png",
+  "categories": ["Advertising"],
+  "allowCustomFields": false,
+  "permissions": [
+    {
+      "permission": "fetch",
+      "explanation": "reports attribution data back to Twitter servers",
+      "required": true
+    }
+  ]
 }
