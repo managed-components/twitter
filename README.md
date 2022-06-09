@@ -20,6 +20,15 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
 2. Install dependencies with `npm i`
 3. Run unit test watcher with `npm run test:dev`
 
+## 🧱 Fields Description
+
+1. ### Twitter Pixel ID
+   #### The Twitter Pixel ID is the unique identifier of your Twitter Pixel. You can find it inside the Twitter snippet, as `twq('init','twitter_pixel_id');`. [Learn more](https://business.twitter.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html)
+   - code: txn_id
+   - placeholder: XXXXXXXXX
+   - type: number
+   - requiered: true
+
 ## 📝 License
 
 Licensed under the [Apache License](./LICENSE).
