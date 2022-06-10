@@ -24,7 +24,7 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
 
 ### txn\*id _required_
 
-Twitter Pixel ID is the unique identifier of your Twitter Pixel. You can find it inside the Twitter snippet, as `twq('init','twitter_pixel_id');`. [Learn more](https://business.twitter.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html)
+'number' Twitter Pixel ID is the unique identifier of your Twitter Pixel. You can find it inside the Twitter snippet, as `twq('init','twitter_pixel_id');`. [Learn more](https://business.twitter.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html)
 
 ## 📝 License
 
