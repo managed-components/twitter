@@ -5,11 +5,10 @@
   "icon": "assets/twitter.png",
   "categories": ["Advertising"],
   "allowCustomFields": false,
-  "permissions": [
-    {
-      "permission": "fetch",
-      "explanation": "reports attribution data back to Twitter servers",
+  "permissions": {
+    "client_network_requests": {
+      "description": "Reports attribution data back to Twitter servers",
       "required": true
     }
-  ]
+  }
 }
