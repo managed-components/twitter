@@ -33,7 +33,11 @@ const onEvent =
       }
       if (pageview) payload.events = '[["pageview", null]]'
       const params = new URLSearchParams(payload).toString()
-      event.client.fetch(`${url}?${params}`)
+      event.client.fetch(`${url}?${params}`, {
+        credentials: 'include',
+        keepalive: true,
+        mode: 'no-cors',
+      })
     }
   }
 
