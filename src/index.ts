@@ -1,9 +1,14 @@
 import { ComponentSettings, Manager, MCEvent } from '@managed-components/types'
 
+const CLICK_ID_PARAM = 'twclid'
+const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
+const CLICK_SOURCE_PARAM = 'clid_src'
+const ONE_MONTH = 2628000000
+
 const getStandardParams = (event: MCEvent) => {
   return {
     type: 'javascript',
-    version: '1.1.0',
+    version: '2.3.29',
     p_id: 'Twitter',
     p_user_id: 0,
     tw_sale_amount: 0,
@@ -32,6 +37,37 @@ const onEvent =
         ...event.payload,
       }
       if (pageview) payload.events = '[["pageview", null]]'
+
+      // Handle twitter click id
+      if (event.client.url.searchParams.get(CLICK_ID_PARAM)) {
+        event.client.set(
+          CLICK_ID_COOKIE,
+          encodeURIComponent(
+            JSON.stringify({
+              pixelVersion: '2.3.29',
+              timestamp: Date.now(),
+              twclid: event.client.url.searchParams.get(CLICK_ID_PARAM),
+              source: 1,
+            })
+          ),
+          { expiry: ONE_MONTH }
+        )
+      }
+
+      // tw_clid_src: 1 if value comes from parameter present in the URL, 2 if coming from the cookie
+      // *order matters* 1/ check param 2/ check cookie
+      const clid_src = event.client.url.searchParams.get(CLICK_ID_PARAM)
+        ? 1
+        : event.client.get(CLICK_ID_COOKIE)
+        ? 2
+        : null
+      clid_src && (payload[CLICK_SOURCE_PARAM] = clid_src)
+
+      // twclid
+      const clid = event.client.get(CLICK_ID_COOKIE)
+      clid &&
+        (payload[CLICK_ID_PARAM] = JSON.parse(decodeURIComponent(clid))?.twclid)
+
       const params = new URLSearchParams(payload).toString()
       event.client.fetch(`${url}?${params}`, {
         credentials: 'include',
