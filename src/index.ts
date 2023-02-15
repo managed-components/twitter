@@ -3,7 +3,7 @@ import { ComponentSettings, Manager, MCEvent } from '@managed-components/types'
 const CLICK_ID_PARAM = 'twclid'
 const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
 const CLICK_SOURCE_PARAM = 'clid_src'
-const ONE_MONTH = (1000 * 60 * 60 * 24 * 365) / 12
+const ONE_MONTH = 2628000000
 
 const getStandardParams = (event: MCEvent) => {
   return {
