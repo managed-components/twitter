@@ -1,26 +1,110 @@
-<section class="bg-white max-w-xl cursor-pointer hover:bg-slate-50 border rounded-xl border-gray-300 p-4 text-black">
-  <header class="flex">
-    <img src="{{{picture}}}" class="rounded-full" />
-    <div class="flex-col ml-2">
-      <strong>{{name}}</strong>
-      <p><span class="text-gray-400">@{{username}}</span> · <a class="font-bold text-blue-500"
-          href="https://twitter.com/intent/follow?screen_name={{username}}" target="_blank">Follow</a>
+<section
+  class="bg-white max-w-xl cursor-pointer hover:bg-slate-50 border rounded-xl border-gray-300 p-4 text-black"
+>
+  <header class="flex justify-between">
+    <div class="account-details flex">
+      <img src="{{{picture}}}" class="profile-image mb-2 rounded-full" />
+      <div class="profile-details flex-col ml-2">
+        <strong>{{name}}</strong>
+        <p>
+          <span class="text-gray-400">@{{username}}</span> ·
+          <a
+            class="font-bold text-blue-500"
+            href="https://twitter.com/intent/follow?screen_name={{username}}"
+            target="_blank"
+            >Follow</a
+          >
+        </p>
+      </div>
     </div>
+    <a
+      class="x-icon flex-grow flex justify-end items-start"
+      href="https://twitter.com/{{ username }}/status/{{ tweetId }}"
+      target="_blank"
+    >
+      {{{xIcon}}}
+    </a>
   </header>
   <main class="my-2">
-    <p class="mb-2 text-lg">{{text}}</p>
-    <a href="{{id}}" class="hover:underline text-gray-400">{{ datetime }}</a>
+    <p class="post-text mb-2 text-lg">{{text}}</p>
+    <div class="flex">
+      <a
+        href="https://twitter.com/{{ username }}/status/{{ tweetId }}"
+        target="_blank"
+        class="hover:underline text-gray-500"
+        >{{ datetime }}</a
+      >
+      <a
+        class="tooltip flex-grow flex justify-end items-start"
+        href="https://help.twitter.com/en/twitter-for-websites-ads-info-and-privacy"
+        rel="noopener noreferrer nofollow"
+        target="_blank"
+        role="link"
+        >{{{tooltipIcon}}}</a
+      >
+    </div>
   </main>
   <footer class="border-t pt-3 font-bold text-gray-600 text-sm">
-    <a href="https://twitter.com/intent/like?tweet_id={{ tweetId }}" class="likes mr-4" target="_blank">
-      {{{ heartIcon }}} {{likes}}
-    </a>
-    <a href="https://twitter.com/intent/tweet?in_reply_to={{tweetId}}" class="comments mr-4" target="_blank">{{{
-      commentIcon }}} Reply</a>
-    <a href="#" class="link">{{{ linkIcon }}} Copy link</a>
-    <a href="https://twitter.com/{{ username }}/status/{{ tweetId }}" target="_blank"
-      class="block rounded-full text-blue-500 w-full border border-gray-300 text-center p-1 mt-3 hover:bg-blue-100">Read
-      {{ replies }}
-      replies</a>
+    <div class="flex">
+      <a
+        href="https://twitter.com/intent/like?tweet_id={{ tweetId }}"
+        class="likes w-1/6"
+        target="_blank"
+      >
+        {{{ heartIcon }}} {{likes}}
+      </a>
+      <a
+        href="https://twitter.com/intent/tweet?in_reply_to={{tweetId}}"
+        class="comments w-1/6"
+        target="_blank"
+        >{{{ commentIcon }}}Reply</a
+      >
+      <div class="copy-button w-4/6" onclick="copyToClipboard()">
+        <p class="link">{{{linkIcon}}}Copy link to post</p>
+      </div>
+    </div>
+    <a
+      href="https://twitter.com/{{ username }}/status/{{ tweetId }}"
+      target="_blank"
+      class="block rounded-full text-blue-500 w-full border border-gray-300 text-center p-1 mt-3 hover:bg-blue-100"
+      >Read {{ replies }} replies</a
+    >
   </footer>
+
+  <script>
+    function copyToClipboard() {
+      const textarea = document.createElement('textarea')
+      textarea.value = 'https://twitter.com/{{ username }}/status/{{ tweetId }}'
+      textarea.style.top = '0'
+      textarea.style.left = '0'
+      textarea.style.position = 'fixed'
+      document.body.appendChild(textarea)
+      textarea.focus()
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+      modifyCopyLink()
+    }
+    function modifyCopyLink() {
+      const linkElement = document.querySelector('.link')
+      if (linkElement) {
+        const originalText =
+          linkElement.childNodes[linkElement.childNodes.length - 1].textContent
+        linkElement.childNodes[linkElement.childNodes.length - 1].textContent =
+          'Copied!'
+        const svgPath = linkElement.querySelector('path')
+        const originalPath = svgPath.getAttribute('d')
+        svgPath.setAttribute(
+          'd',
+          'M9.64 18.952l-5.55-4.861 1.317-1.504 3.951 3.459 8.459-10.948L19.4 6.32 9.64 18.952z'
+        )
+        setTimeout(() => {
+          linkElement.childNodes[
+            linkElement.childNodes.length - 1
+          ].textContent = originalText
+          svgPath.setAttribute('d', originalPath)
+        }, 5000)
+      }
+    }
+  </script>
 </section>

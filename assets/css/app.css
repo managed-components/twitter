@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+.x-icon {
+  width: 25px;
+}
+
+.profile-image{
+ display: inline-block; 
+}
+
+.profile-details{
+ display: inline-block; 
+}
+
+.datetime {
+  color: rgb(83, 100, 113);
+}
 
 .datetime:hover {
   @apply underline;
@@ -12,49 +27,69 @@ svg {
 }
 
 .likes svg {
-    fill: rgb(249, 24, 128);
+  fill: rgb(249, 24, 128);
 }
 
 .likes:hover {
-    color: rgb(249, 24, 128);
+  @apply underline;
+  color: rgb(249, 24, 128);
 }
 
 .likes:hover svg {
-  background: rgba(249, 24, 128, 0.2);
+  background: rgba(249, 24, 128, 0.1);
   outline: 5px solid;
-  outline-color: rgba(249, 24, 128, 0.2);
+  outline-color: rgba(249, 24, 128, 0.1);
 }
 
-
-
 .comments svg {
-    fill: rgb(29, 155, 240);
+  fill: rgb(29, 155, 240);
 }
 
 .comments:hover {
-    color: rgb(29, 155, 240);
+  @apply underline;
+  color: rgb(29, 155, 240);
 }
 
 .comments:hover svg {
-  background: rgba(29, 155, 240, 0.2);
+  background: rgba(29, 155, 240, 0.1);
   outline: 5px solid;
-  outline-color: rgba(29, 155, 240, 0.2);
+  outline-color: rgba(29, 155, 240, 0.1);
 }
-
-
-
 
 .link svg {
-    fill: rgb(75 85 99 / var(--tw-text-opacity));
+  fill: rgb(75 85 99 / var(--tw-text-opacity));
 }
 .link:hover {
-    color: rgb(75, 85, 99);
+  color: rgb(0, 186, 124);
+  @apply underline;
 }
 
 .link:hover svg {
-  background: rgba(75, 85, 99, 0.2);
+  background: rgba(0, 186, 124, 0.1);
   outline: 5px solid;
-  outline-color: rgba(75, 85, 99, 0.2);
+  outline-color: rgba(0, 186, 124, 0.1);
+  fill:rgb(0, 186, 124)
 }
 
+.x-icon svg {
+  max-height: 2rem;
+  border-radius: 0;
+  margin-right: 0;
+}
 
+.post-text{
+  white-space: pre-line;
+}
+
+.tooltip svg {
+  max-height: 1.2rem; 
+  /* border-radius: 0; */
+  margin-right: 0;
+  fill: rgb(83, 100, 113);
+}
+
+.tooltip:hover svg {
+  background: rgba(29, 155, 240, 0.1);
+  outline: 5px solid;
+  outline-color: rgba(29, 155, 240, 0.1);
+}
