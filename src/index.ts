@@ -105,8 +105,7 @@ export default async function (manager: Manager) {
       600 // Cache the Tweet for 10 minutes
     )
 
-    const { user } = tweetResponse
-    const { created_at } = tweetResponse
+    const { user, created_at } = tweetResponse
     const dt = new Date(created_at)
 
     const datetime =
@@ -129,7 +128,7 @@ export default async function (manager: Manager) {
       profileImage = base64Encode(await res.arrayBuffer())
       manager.set('profileImage_' + user.screen_name, profileImage)
     }
-    console.log('this is text: ', tweetResponse.text)
+
     const output = mustache.render(post, {
       text: tweetResponse.text,
       name: user.name,
