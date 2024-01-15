@@ -1,0 +1,26 @@
+<section class="bg-white max-w-xl cursor-pointer hover:bg-slate-50 border rounded-xl border-gray-300 p-4 text-black">
+  <header class="flex">
+    <img src="{{{picture}}}" class="rounded-full" />
+    <div class="flex-col ml-2">
+      <strong>{{name}}</strong>
+      <p><span class="text-gray-400">@{{username}}</span> · <a class="font-bold text-blue-500"
+          href="https://twitter.com/intent/follow?screen_name={{username}}" target="_blank">Follow</a>
+    </div>
+  </header>
+  <main class="my-2">
+    <p class="mb-2 text-lg">{{text}}</p>
+    <a href="{{id}}" class="hover:underline text-gray-400">{{ datetime }}</a>
+  </main>
+  <footer class="border-t pt-3 font-bold text-gray-600 text-sm">
+    <a href="https://twitter.com/intent/like?tweet_id={{ tweetId }}" class="likes mr-4" target="_blank">
+      {{{ heartIcon }}} {{likes}}
+    </a>
+    <a href="https://twitter.com/intent/tweet?in_reply_to={{tweetId}}" class="comments mr-4" target="_blank">{{{
+      commentIcon }}} Reply</a>
+    <a href="#" class="link">{{{ linkIcon }}} Copy link</a>
+    <a href="https://twitter.com/{{ username }}/status/{{ tweetId }}" target="_blank"
+      class="block rounded-full text-blue-500 w-full border border-gray-300 text-center p-1 mt-3 hover:bg-blue-100">Read
+      {{ replies }}
+      replies</a>
+  </footer>
+</section>
