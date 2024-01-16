@@ -1,5 +1,13 @@
-import { ComponentSettings, Manager, MCEvent } from '@managed-components/types'
-
+import { Manager, MCEvent } from '@managed-components/types'
+import post from './templates/post.html'
+import style from '../dist/output.css'
+import mustache from 'mustache'
+import { numberFormatter, base64Encode } from './utils'
+import heartIcon from '../assets/icons/heart.svg'
+import commentIcon from '../assets/icons/comment.svg'
+import linkIcon from '../assets/icons/link.svg'
+import xIcon from '../assets/icons/x.svg'
+import tooltipIcon from '../assets/icons/tool-tip.svg'
 const CLICK_ID_PARAM = 'twclid'
 const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
 const CLICK_SOURCE_PARAM = 'clid_src'
@@ -77,7 +85,66 @@ const onEvent =
     }
   }
 
-export default async function (manager: Manager, _settings: ComponentSettings) {
+export default async function (manager: Manager) {
   manager.addEventListener('pageview', onEvent(true))
   manager.addEventListener('event', onEvent())
+
+  manager.registerEmbed('post', async ({ parameters }) => {
+    const tweetId = parameters['tweet-id']
+    const randomToken = [...Array(11)]
+      .map(() => (Math.random() * 36).toString(36)[2])
+      .join('')
+    const tweetResponse = await manager.useCache(
+      'tweet_' + tweetId,
+      async () => {
+        const res = await fetch(
+          `https://cdn.syndication.twimg.com/tweet-result?id=${tweetId}&token=${randomToken}`
+        )
+        return await res.json()
+      },
+      600 // Cache the Tweet for 10 minutes
+    )
+
+    const { user, created_at } = tweetResponse
+    const dt = new Date(created_at)
+
+    const datetime =
+      dt.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      }) +
+      ' · ' +
+      dt.toLocaleString('en-US', { month: 'short' }) +
+      ' ' +
+      dt.getDate() +
+      ', ' +
+      dt.getFullYear()
+
+    let profileImage = manager.get('profileImage_' + user.screen_name)
+
+    if (!profileImage) {
+      const res = await fetch(user.profile_image_url_https)
+      profileImage = base64Encode(await res.arrayBuffer())
+      manager.set('profileImage_' + user.screen_name, profileImage)
+    }
+
+    const output = mustache.render(post, {
+      text: tweetResponse.text,
+      name: user.name,
+      username: user.screen_name,
+      picture: 'data:image/jpeg;base64,' + profileImage,
+      datetime,
+      likes: numberFormatter(tweetResponse.favorite_count, 1),
+      replies: numberFormatter(tweetResponse.conversation_count, 1),
+      heartIcon,
+      commentIcon,
+      linkIcon,
+      tweetId,
+      xIcon,
+      tooltipIcon,
+    })
+
+    return `<div><style>${style}</style>${output}</div>`
+  })
 }
