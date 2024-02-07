@@ -26,7 +26,12 @@
     </a>
   </header>
   <main class="my-2">
-    <p class="post-text mb-2 text-lg">{{text}}</p>
+    <a
+      href="https://twitter.com/{{ username }}/status/{{ tweetId }}"
+      target="_blank"
+    >
+      <p class="post-text mb-2 text-lg">{{text}} <span>{{retweetUrl}}</span></p> 
+    </a>
     <div class="flex">
       <a
         href="https://twitter.com/{{ username }}/status/{{ tweetId }}"
