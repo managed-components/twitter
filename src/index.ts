@@ -10,6 +10,12 @@ import xIcon from '../assets/icons/x.svg'
 import tooltipIcon from '../assets/icons/tool-tip.svg'
 import UAParser from 'ua-parser-js'
 
+interface EmbedFunctionParams {
+  parameters: { [key: string]: unknown };
+  userAgent: string; // Assuming userAgent is a string
+}
+
+
 const CLICK_ID_PARAM = 'twclid'
 const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
 const CLICK_SOURCE_PARAM = 'clid_src'
@@ -91,7 +97,7 @@ export default async function (manager: Manager) {
   manager.addEventListener('pageview', onEvent(true))
   manager.addEventListener('event', onEvent())
 
-  manager.registerEmbed('post', async ({ parameters, userAgent }) => {
+  manager.registerEmbed('post', async ({ parameters, userAgent }: EmbedFunctionParams) => {
     const tweetId = parameters['tweet-id']
     const randomToken = [...Array(11)]
       .map(() => (Math.random() * 36).toString(36)[2])
