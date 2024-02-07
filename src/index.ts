@@ -11,10 +11,9 @@ import tooltipIcon from '../assets/icons/tool-tip.svg'
 import UAParser from 'ua-parser-js'
 
 interface EmbedFunctionParams {
-  parameters: { [key: string]: unknown };
-  userAgent: string; // Assuming userAgent is a string
+  parameters: { [key: string]: unknown }
+  userAgent: string // Assuming userAgent is a string
 }
-
 
 const CLICK_ID_PARAM = 'twclid'
 const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
@@ -97,97 +96,100 @@ export default async function (manager: Manager) {
   manager.addEventListener('pageview', onEvent(true))
   manager.addEventListener('event', onEvent())
 
-  manager.registerEmbed('post', async ({ parameters, userAgent }: EmbedFunctionParams) => {
-    const tweetId = parameters['tweet-id']
-    const randomToken = [...Array(11)]
-      .map(() => (Math.random() * 36).toString(36)[2])
-      .join('')
-    const parsedUserAgent = UAParser(userAgent)
-    const tweetResponse = await manager.useCache(
-      'tweet_' + tweetId,
-      async () => {
-        const res = await manager.fetch(
-          `https://cdn.syndication.twimg.com/tweet-result?id=${tweetId}&token=${randomToken}`,
-          {
-            headers: {
-              accept:
-                'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-              'User-Agent': `${parsedUserAgent}`,
-            },
-          }
-        )
-        const responseString = await res.json()
-        return JSON.stringify(responseString)
-      },
-      600 // Cache the Tweet for 10 minutes
-    )
-
-    const {
-      user,
-      created_at,
-      text,
-      favorite_count,
-      conversation_count,
-      quoted_tweet,
-    } = JSON.parse(tweetResponse)
-    const dt = new Date(created_at)
-
-    const datetime = `${dt.toLocaleString('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    })} · ${dt.toLocaleString('en-US', {
-      month: 'short',
-    })} ${dt.getDate()}, ${dt.getFullYear()}`
-
-    let profileImage = manager.get('profileImage_' + user.screen_name)
-
-    if (!profileImage) {
-      const res = await manager.fetch(user.profile_image_url_https, {
-        headers: {
-          Accept: 'image/jpeg,image/png,image/*,*/*;q=0.8',
-          'User-Agent': `${parsedUserAgent}`,
+  manager.registerEmbed(
+    'post',
+    async ({ parameters, userAgent }: EmbedFunctionParams) => {
+      const tweetId = parameters['tweet-id']
+      const randomToken = [...Array(11)]
+        .map(() => (Math.random() * 36).toString(36)[2])
+        .join('')
+      const parsedUserAgent = UAParser(userAgent)
+      const tweetResponse = await manager.useCache(
+        'tweet_' + tweetId,
+        async () => {
+          const res = await manager.fetch(
+            `https://cdn.syndication.twimg.com/tweet-result?id=${tweetId}&token=${randomToken}`,
+            {
+              headers: {
+                accept:
+                  'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'User-Agent': `${parsedUserAgent}`,
+              },
+            }
+          )
+          const responseString = await res.json()
+          return JSON.stringify(responseString)
         },
-        method: 'GET',
+        600 // Cache the Tweet for 10 minutes
+      )
+
+      const {
+        user,
+        created_at,
+        text,
+        favorite_count,
+        conversation_count,
+        quoted_tweet,
+      } = JSON.parse(tweetResponse)
+      const dt = new Date(created_at)
+
+      const datetime = `${dt.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      })} · ${dt.toLocaleString('en-US', {
+        month: 'short',
+      })} ${dt.getDate()}, ${dt.getFullYear()}`
+
+      let profileImage = manager.get('profileImage_' + user.screen_name)
+
+      if (!profileImage) {
+        const res = await manager.fetch(user.profile_image_url_https, {
+          headers: {
+            Accept: 'image/jpeg,image/png,image/*,*/*;q=0.8',
+            'User-Agent': `${parsedUserAgent}`,
+          },
+          method: 'GET',
+        })
+        profileImage = base64Encode(await res.arrayBuffer())
+        manager.set('profileImage_' + user.screen_name, profileImage)
+      }
+
+      // in case of retweet add the retweet post url
+      function getRetweetUrl(retweetDetails: {
+        user: {
+          screen_name: string
+        }
+        id_str: string
+      }) {
+        if (!retweetDetails) {
+          return ''
+        } else {
+          const retweetUser = retweetDetails.user.screen_name
+          const retweetId = retweetDetails.id_str
+          return `https://twitter.com/${retweetUser}/status/${retweetId}`
+        }
+      }
+      const retweetUrl = getRetweetUrl(quoted_tweet)
+
+      const output = mustache.render(post, {
+        text,
+        name: user.name,
+        username: user.screen_name,
+        picture: 'data:image/jpeg;base64,' + profileImage,
+        datetime,
+        likes: numberFormatter(favorite_count, 1),
+        replies: numberFormatter(conversation_count, 1),
+        heartIcon,
+        commentIcon,
+        linkIcon,
+        tweetId,
+        xIcon,
+        tooltipIcon,
+        retweetUrl,
       })
-      profileImage = base64Encode(await res.arrayBuffer())
-      manager.set('profileImage_' + user.screen_name, profileImage)
+
+      return `<div><style>${style}</style>${output}</div>`
     }
-
-    // in case of retweet add the retweet post url
-    function getRetweetUrl(retweetDetails: {
-      user: {
-        screen_name: string
-      }
-      id_str: string
-    }) {
-      if (!retweetDetails) {
-        return ''
-      } else {
-        const retweetUser = retweetDetails.user.screen_name
-        const retweetId = retweetDetails.id_str
-        return `https://twitter.com/${retweetUser}/status/${retweetId}`
-      }
-    }
-    const retweetUrl = getRetweetUrl(quoted_tweet)
-
-    const output = mustache.render(post, {
-      text,
-      name: user.name,
-      username: user.screen_name,
-      picture: 'data:image/jpeg;base64,' + profileImage,
-      datetime,
-      likes: numberFormatter(favorite_count, 1),
-      replies: numberFormatter(conversation_count, 1),
-      heartIcon,
-      commentIcon,
-      linkIcon,
-      tweetId,
-      xIcon,
-      tooltipIcon,
-      retweetUrl,
-    })
-
-    return `<div><style>${style}</style>${output}</div>`
-  })
+  )
 }
