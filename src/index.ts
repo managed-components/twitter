@@ -1,4 +1,4 @@
-import { Manager, MCEvent } from '@managed-components/types'
+import { ComponentSettings, Manager, MCEvent } from '@managed-components/types'
 import post from './templates/post.html'
 import style from '../dist/output.css'
 import mustache from 'mustache'
@@ -13,7 +13,7 @@ const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
 const CLICK_SOURCE_PARAM = 'clid_src'
 const ONE_MONTH = 2628000000
 
-const getStandardParams = (event: MCEvent) => {
+const getStandardParams = (event: MCEvent, settings: ComponentSettings) => {
   return {
     type: 'javascript',
     version: '2.3.29',
@@ -24,6 +24,7 @@ const getStandardParams = (event: MCEvent) => {
     tw_iframe_status: 0,
     tpx_cb: 'twttr.conversion.loadPixels',
     tw_document_href: event.client.url.href,
+    txn_id: settings['txn_id'],
   }
 }
 
@@ -36,11 +37,11 @@ const endpoints = [
 ]
 
 const onEvent =
-  (pageview = false) =>
+  (pageview = false, settings: ComponentSettings) =>
   async (event: MCEvent) => {
     for (const { url, data } of endpoints) {
       const payload = {
-        ...getStandardParams(event),
+        ...getStandardParams(event, settings),
         ...data,
         ...event.payload,
       }
@@ -85,9 +86,9 @@ const onEvent =
     }
   }
 
-export default async function (manager: Manager) {
-  manager.addEventListener('pageview', onEvent(true))
-  manager.addEventListener('event', onEvent())
+export default async function (manager: Manager, settings: ComponentSettings) {
+  manager.addEventListener('pageview', onEvent(true, settings))
+  manager.addEventListener('event', onEvent(false, settings))
 
   manager.registerEmbed('post', async ({ parameters }) => {
     const tweetId = parameters['tweet-id']
