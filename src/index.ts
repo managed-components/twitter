@@ -91,12 +91,12 @@ export default async function (manager: Manager) {
   manager.addEventListener('pageview', onEvent(true))
   manager.addEventListener('event', onEvent())
 
-  manager.registerEmbed('post', async ({ parameters, userAgent }) => {
+  manager.registerEmbed('post', async ({ parameters, client }) => {
     const tweetId = parameters['tweet-id']
     const randomToken = [...Array(11)]
       .map(() => (Math.random() * 36).toString(36)[2])
       .join('')
-    const parsedUserAgent = UAParser(userAgent)
+    const parsedUserAgent = UAParser(client.userAgent)
     const tweetResponse = await manager.useCache(
       'tweet_' + tweetId,
       async () => {
