@@ -110,6 +110,9 @@ export default async function (manager: Manager) {
             },
           }
         )
+        if (!res) {
+          throw new Error('Failed to fetch tweet data.')
+        }
         const responseString = await res.json()
         return JSON.stringify(responseString)
       },
@@ -134,7 +137,7 @@ export default async function (manager: Manager) {
       month: 'short',
     })} ${dt.getDate()}, ${dt.getFullYear()}`
 
-    let profileImage = manager.get('profileImage_' + user.screen_name)
+    let profileImage = await manager.get('profileImage_' + user.screen_name)
 
     if (!profileImage) {
       const res = await manager.fetch(user.profile_image_url_https, {
@@ -144,8 +147,15 @@ export default async function (manager: Manager) {
         },
         method: 'GET',
       })
-      profileImage = base64Encode(await res.arrayBuffer())
-      manager.set('profileImage_' + user.screen_name, profileImage)
+      if (!res || !res.ok) {
+        throw new Error(
+          !res ? 'Failed to fetch the image.' : 'Network response was not ok.'
+        )
+      }
+      const imageBuffer = await res.arrayBuffer()
+
+      profileImage = base64Encode(imageBuffer)
+      await manager.set('profileImage_' + user.screen_name, profileImage)
     }
 
     // in case of retweet add the retweet post url
