@@ -8,7 +8,6 @@ import commentIcon from '../assets/icons/comment.svg'
 import linkIcon from '../assets/icons/link.svg'
 import xIcon from '../assets/icons/x.svg'
 import tooltipIcon from '../assets/icons/tool-tip.svg'
-import UAParser from 'ua-parser-js'
 
 const CLICK_ID_PARAM = 'twclid'
 const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
@@ -96,7 +95,7 @@ export default async function (manager: Manager) {
     const randomToken = [...Array(11)]
       .map(() => (Math.random() * 36).toString(36)[2])
       .join('')
-    const parsedUserAgent = UAParser(client.userAgent)
+    const userAgent = client.userAgent
     const tweetResponse = await manager.useCache(
       'tweet_' + tweetId,
       async () => {
@@ -106,7 +105,7 @@ export default async function (manager: Manager) {
             headers: {
               accept:
                 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-              'User-Agent': `${parsedUserAgent}`,
+              'User-Agent': `${userAgent}`,
             },
           }
         )
@@ -143,7 +142,7 @@ export default async function (manager: Manager) {
       const res = await manager.fetch(user.profile_image_url_https, {
         headers: {
           Accept: 'image/jpeg,image/png,image/*,*/*;q=0.8',
-          'User-Agent': `${parsedUserAgent}`,
+          'User-Agent': `${userAgent}`,
         },
         method: 'GET',
       })
