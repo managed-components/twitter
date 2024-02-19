@@ -146,15 +146,12 @@ export default async function (manager: Manager) {
         },
         method: 'GET',
       })
-      if (!res || !res.ok) {
-        throw new Error(
-          !res ? 'Failed to fetch the image.' : 'Network response was not ok.'
-        )
-      }
-      const imageBuffer = await res.arrayBuffer()
+      if (res) {
+        const imageBuffer = await res.arrayBuffer()
 
-      profileImage = base64Encode(imageBuffer)
-      await manager.set('profileImage_' + user.screen_name, profileImage)
+        profileImage = base64Encode(imageBuffer)
+        await manager.set('profileImage_' + user.screen_name, profileImage)
+      }
     }
 
     // in case of retweet add the retweet post url
