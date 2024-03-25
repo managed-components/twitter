@@ -55,7 +55,7 @@ Specify the post you wish to render using the `tweet-id` parameter. You can find
 
 ### Support
 
-This MC only supports the rendering an image, text, captions and post details. Posts that include an image gallery and/or videos will be rendered as a single image post.
+This MC only supports the display of the tweet’s text, account and profile information, date and time, as well as likes, replies, and other engagement metrics.
 ◊
 
 ## 📝 License

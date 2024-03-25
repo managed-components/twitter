@@ -91,6 +91,8 @@ export default async function (manager: Manager) {
   manager.addEventListener('event', onEvent())
 
   manager.registerEmbed('post', async ({ parameters, client }) => {
+    const prefixedUA =
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
     const tweetId = parameters['tweet-id']
     const randomToken = [...Array(11)]
       .map(() => (Math.random() * 36).toString(36)[2])
@@ -104,9 +106,7 @@ export default async function (manager: Manager) {
             headers: {
               accept:
                 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-              'User-Agent':
-                client?.userAgent ||
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+              'User-Agent': client?.userAgent || prefixedUA,
             },
           }
         )
@@ -143,9 +143,7 @@ export default async function (manager: Manager) {
       const res = await manager.fetch(user.profile_image_url_https, {
         headers: {
           Accept: 'image/jpeg,image/png,image/*,*/*;q=0.8',
-          'User-Agent':
-            client?.userAgent ||
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+          'User-Agent': client?.userAgent || prefixedUA,
         },
         method: 'GET',
       })
