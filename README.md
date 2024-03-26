@@ -26,9 +26,9 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
 
 ## ⎙ Embeds
 
-### Twitter Post
+### Post
 
-This Managed Components uses the [Embeds API](https://managedcomponents.dev/specs/embed-and-widgets/embeds) to render tweets on a web page, with its embed `twitter-post`. This Embed accepts the folowing parameters:
+This Managed Component uses the [Embeds API](https://managedcomponents.dev/specs/embed-and-widgets/embeds) to render tweets on a web page, with its embed `twitter-post`. This Embed accepts the folowing parameters:
 
 #### Tweet ID _required_
 
@@ -55,7 +55,7 @@ Specify the post you wish to render using the `tweet-id` parameter. You can find
 
 ### Support
 
-This MC only supports the display of the tweet’s text, account and profile information, date and time, as well as likes, replies, and other engagement metrics.
+This Managed Component only supports the display of the tweet’s text, account and profile information, date and time, as well as likes, replies, and other engagement metrics.
 ◊
 
 ## 📝 License
