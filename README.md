@@ -24,6 +24,40 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
 
 `txn_id` is the unique identifier of your Twitter Pixel. You can find it inside the Twitter snippet, as `twq('init','twitter_pixel_id');`. [Learn more](https://business.twitter.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html)
 
+## ⎙ Embeds
+
+### Post
+
+This Managed Component uses the [Embeds API](https://managedcomponents.dev/specs/embed-and-widgets/embeds) to render tweets on a web page, with its embed `twitter-post`. This Embed accepts the folowing parameters:
+
+#### Tweet ID _required_
+
+Specify the post you wish to render using the `tweet-id` parameter. You can find the tweed ID in the URL when you open it in the browser.
+
+---
+
+**Examples:**
+
+1. To place an embed on a page using WebCM, use a placeholder div element with the following attributes:
+
+```html
+<div
+  data-component-embed="twitter-post"
+  data-tweet-id="1754336034228171055"
+></div>
+```
+
+2.  To place an embed on a page using Cloudflare Zaraz, use a placeholder `twitter-post` HTML element with the following attributes:
+
+```html
+<twitter-post component="twitter" tweet-id="1754336034228171055"></twitter-post>
+```
+
+### Support
+
+This Managed Component only supports the display of the tweet’s text, account and profile information, date and time, as well as likes, replies, and other engagement metrics.
+◊
+
 ## 📝 License
 
 Licensed under the [Apache License](./LICENSE).
