@@ -50,7 +50,7 @@ Specify the post you wish to render using the `tweet-id` parameter. You can find
 2.  To place an embed on a page using Cloudflare Zaraz, use a placeholder `twitter-post` HTML element with the following attributes:
 
 ```html
-<twitter-post component="twitter" tweet-id="1754336034228171055"></twitter-post>
+<twitter-post tweet-id="1754336034228171055"></twitter-post>
 ```
 
 ### Support
