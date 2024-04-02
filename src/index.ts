@@ -104,8 +104,7 @@ export default async function (manager: Manager) {
           `https://cdn.syndication.twimg.com/tweet-result?id=${tweetId}&token=${randomToken}`,
           {
             headers: {
-              accept:
-                'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+              Accept: 'application/json',
               'User-Agent': client?.userAgent || prefixedUA,
             },
           }
@@ -113,8 +112,7 @@ export default async function (manager: Manager) {
         if (!res) {
           throw new Error('Failed to fetch tweet data.')
         }
-        const responseString = await res.json()
-        return JSON.stringify(responseString)
+        return await res.text()
       },
       600 // Cache the Tweet for 10 minutes
     )
