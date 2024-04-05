@@ -9,6 +9,10 @@
     "client_network_requests": {
       "description": "Reports attribution data back to Twitter servers",
       "required": true
+    },
+    "server_network_requests": {
+      "description": "Twitter uses serverside network requests to report data",
+      "required": true
     }
   }
 }
