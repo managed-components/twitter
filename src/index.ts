@@ -14,6 +14,32 @@ const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
 const CLICK_SOURCE_PARAM = 'clid_src'
 const ONE_MONTH = 2628000000
 
+async function hashUserData(event: MCEvent) {
+  const USER_DATA: Record<string, { hashed?: boolean }> = {
+    email_address: { hashed: true },
+    phone_number: { hashed: true },
+  }
+
+  const hashedData: Record<string, string> = {}
+  const encoder = new TextEncoder()
+
+  for (const [key, options] of Object.entries(USER_DATA)) {
+    let value = event.payload[key]
+    if (value) {
+      if (options.hashed) {
+        const data = encoder.encode(value.trim().toLowerCase())
+        const digest = await crypto.subtle.digest('SHA-256', data)
+        const hashArray = Array.from(new Uint8Array(digest))
+        value = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+      }
+      hashedData[key] = value
+      delete event.payload[key]
+    }
+  }
+
+  return hashedData
+}
+
 const getStandardParams = (event: MCEvent) => {
   return {
     type: 'javascript',
@@ -39,13 +65,22 @@ const endpoints = [
 const onEvent =
   (pageview = false) =>
   async (event: MCEvent) => {
+    const eventId = pageview ? crypto.randomUUID() : null
+    const hashedUserData = await hashUserData(event)
     for (const { url, data } of endpoints) {
       const payload = {
         ...getStandardParams(event),
         ...data,
         ...event.payload,
+        ...hashedUserData,
       }
-      if (pageview) payload.events = '[["pageview", null]]'
+
+      if (pageview) {
+        payload.events = '[["pageview", null]]'
+        if (!payload.event_id) {
+          payload.event_id = eventId
+        }
+      }
 
       // Handle twitter click id
       if (event.client.url.searchParams.get(CLICK_ID_PARAM)) {
@@ -88,7 +123,7 @@ const onEvent =
 
 export default async function (manager: Manager) {
   manager.addEventListener('pageview', onEvent(true))
-  manager.addEventListener('event', onEvent())
+  manager.addEventListener('conversion', onEvent())
 
   manager.registerEmbed('post', async ({ parameters, client }) => {
     const prefixedUA =
