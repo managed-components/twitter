@@ -77,7 +77,9 @@ const onEvent =
 
       if (pageview) {
         payload.events = '[["pageview", null]]'
-        payload.event_id = payload.event_id || eventId
+        if (!payload.event_id) {
+          payload.event_id = eventId
+        }
       }
 
       // Handle twitter click id
