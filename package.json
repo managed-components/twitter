@@ -4,12 +4,14 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-  "lint": "eslint --ext .ts,.js, src",
-  "lint:fix": "eslint --ext .ts,.js, src --fix",
-  "bundle": "node esbuild.js",
-  "build": "npm run lint && npm run typecheck && npm run bundle",
-  "typecheck": "tsc --project tsconfig.build.json --noEmit"
-},
+    "lint": "eslint --ext .ts,.js, src",
+    "lint:fix": "eslint --ext .ts,.js, src --fix",
+    "bundle": "node esbuild.js",
+    "build": "npm run test && npm run lint && npm run typecheck && npm run bundle",
+    "typecheck": "tsc --project tsconfig.build.json --noEmit",
+    "test": "vitest run --globals --passWithNoTests",
+    "test:dev": "vitest --globals --passWithNoTests"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/managed-components/twitter.git"
