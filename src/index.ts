@@ -8,6 +8,11 @@ import commentIcon from '../assets/icons/comment.svg'
 import linkIcon from '../assets/icons/link.svg'
 import xIcon from '../assets/icons/x.svg'
 import tooltipIcon from '../assets/icons/tool-tip.svg'
+import crypto from 'crypto'
+if (!global.crypto) {
+  vi.stubGlobal('crypto', crypto)
+}
+
 
 const CLICK_ID_PARAM = 'twclid'
 const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
