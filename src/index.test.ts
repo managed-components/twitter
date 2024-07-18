@@ -1,6 +1,10 @@
 import { Client, MCEvent } from '@managed-components/types'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { onEvent } from '.'
+import crypto from 'crypto'
+if (!global.crypto) {
+  vi.stubGlobal('crypto', crypto)
+}
 
 describe('Twitter Analytics MC', () => {
   let mockClient: Client
