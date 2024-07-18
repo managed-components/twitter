@@ -62,7 +62,7 @@ const endpoints = [
   { url: 'https://t.co/i/adsct', data: {} },
 ]
 
-const onEvent =
+export const onEvent =
   (pageview = false) =>
   async (event: MCEvent) => {
     const eventId = pageview ? crypto.randomUUID() : null

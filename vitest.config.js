@@ -1,2 +1,5 @@
-import { defineConfig } from 'vitest/config'
-export default defineConfig({})
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  assetsInclude: ['**/*.html'],
+})
