@@ -13,7 +13,6 @@ if (!global.crypto) {
   vi.stubGlobal('crypto', crypto)
 }
 
-
 const CLICK_ID_PARAM = 'twclid'
 const CLICK_ID_COOKIE = `_${CLICK_ID_PARAM}`
 const CLICK_SOURCE_PARAM = 'clid_src'
